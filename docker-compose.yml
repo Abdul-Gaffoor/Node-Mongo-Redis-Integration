@@ -1,0 +1,43 @@
+version: "3"
+services:
+    node:
+        build: .
+        image: gaffoor/node-app
+        ports:
+            - "3000:3000"
+        volumes: 
+            - ./:/app
+            - /app/node_modules    
+        environment: 
+            WAIT_HOSTS: mongo:27017
+        networks: 
+            - integration 
+        links: 
+            - mongo
+            - redis  
+        depends_on:
+            - mongo
+            - redis            
+
+    mongo:
+        image: mongo
+        #credentials are not used for set-up, will be used at secure db
+        environment: 
+            - MONGO_INITDB_ROOT_USERNAME=abdul
+            - MONGO_INITDB_ROOT_PASSWORD=redhat
+        volumes:
+            - ./data:/data/db
+        networks: 
+            - integration   
+    redis:
+        image: redis
+        networks: 
+            - integration 
+                
+volumes:
+    mongo-db:
+networks: 
+    integration:
+
+
+
